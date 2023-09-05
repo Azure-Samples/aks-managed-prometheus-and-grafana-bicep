@@ -61,7 +61,7 @@ az extension update --name aks-preview
 
 ## Architecture
 
-This sample provides a set of Bicep modules to deploy an [Azure Kubernetes Service(AKS)](https://docs.microsoft.com/en-us/azure/aks/intro-kubernetes) cluster, an [Azure Monitor managed service for Prometheus](https://learn.microsoft.com/en-us/azure/azure-monitor/essentials/prometheus-metrics-overview) resource, and [Azure Managed Grafana](https://learn.microsoft.com/en-us/azure/managed-grafana/overview) instance for monitoring the performance and health status of the cluster and workloads. The following diagram shows the architecture and network topology deployed by the sample:
+This sample provides a set of Bicep modules to deploy an [Azure Kubernetes Service(AKS)](https://docs.microsoft.com/en-us/azure/aks/intro-kubernetes) cluster, an [Azure Monitor managed service for Prometheus](https://learn.microsoft.com/en-us/azure/azure-monitor/essentials/prometheus-metrics-overview) resource and an [Azure Managed Grafana](https://learn.microsoft.com/en-us/azure/managed-grafana/overview) instance for monitoring the performance and health status of the cluster and workloads. The following diagram shows the architecture and network topology deployed by the sample:
 
 ![AKS Architecture](images/architecture.png)
 
@@ -126,13 +126,14 @@ The Bicep modules deploy the following Azure resources:
   - Azure Container Registry
   - Azure Storage Account
   - Azure jump-box virtual machine
-- [Microsoft.Resources/deploymentScripts](https://learn.microsoft.com/en-us/azure/templates/microsoft.resources/deploymentscripts?pivots=deployment-language-bicep): a deployment script is used to run the `install-nginx-with-prometheus-metrics-and-create-sa.sh` Bash script which creates the namespace and servicea account for the sample application and installs the following packages to the AKS cluster via [Helm](https://helm.sh/). For more information on deployment scripts, see [Use deployment scripts in Bicep](https://learn.microsoft.com/en-us/azure/azure-resource-manager/bicep/deployment-script-bicep)
+- [Microsoft.Resources/deploymentScripts](https://learn.microsoft.com/en-us/azure/templates/microsoft.resources/deploymentscripts?pivots=deployment-language-bicep): a deployment script is used to run the `install-nginx-with-prometheus-metrics-and-create-sa.sh` Bash script that creates the namespace and service account for the sample application and installs the following packages to the AKS cluster via [Helm](https://helm.sh/). For more information on deployment scripts, see [Use deployment scripts in Bicep](https://learn.microsoft.com/en-us/azure/azure-resource-manager/bicep/deployment-script-bicep)
   - [NGINX Ingress Controller](https://docs.nginx.com/nginx-ingress-controller/)
   - [Cert-Manager](https://cert-manager.io/docs/)
+- [Microsoft.Insights/actionGroups](https://learn.microsoft.com/en-us/azure/templates/microsoft.insights/actiongroups?pivots=deployment-language-bicep): an [Azure Action Group](https://learn.microsoft.com/en-us/azure/azure-monitor/alerts/action-groups) to send emails and SMS notifications to system administrators when alerts are triggered.
 
-The Bicep modules allows to optionally deploy the following resources:
+The Bicep modules allow to deploy the following resources optionally:
 
-- [Microsoft.CognitiveServices/accounts](https://learn.microsoft.com/en-us/azure/templates/microsoft.cognitiveservices/accounts?pivots=deployment-language-bicep): an [Azure OpenAI Service](https://learn.microsoft.com/en-us/azure/cognitive-services/openai/overview) with a [GPT-3.5](https://learn.microsoft.com/en-us/azure/cognitive-services/openai/concepts/models#chatgpt-gpt-35-turbo) model used by an AI application like a chatbot. Azure OpenAI Service gives customers advanced language AI with OpenAI GPT-4, GPT-3, Codex, and DALL-E models with the security and enterprise promise of Azure. Azure OpenAI co-develops the APIs with OpenAI, ensuring compatibility and a smooth transition from one to the other.
+- [Microsoft.CognitiveServices/accounts](https://learn.microsoft.com/en-us/azure/templates/microsoft.cognitiveservices/accounts?pivots=deployment-language-bicep): an [Azure OpenAI Service](https://learn.microsoft.com/en-us/azure/cognitive-services/openai/overview) with a [GPT-3.5](https://learn.microsoft.com/en-us/azure/cognitive-services/openai/concepts/models#chatgpt-gpt-35-turbo) model used by an AI application like a chatbot. Azure OpenAI Service gives customers advanced language AI with OpenAI GPT-4, GPT-3, Codex, and DALL-E models with Azure's security and enterprise promise. Azure OpenAI co-develops the APIs with OpenAI, ensuring compatibility and a smooth transition from one to the other.
 - [Microsoft.ManagedIdentity/userAssignedIdentities](https://learn.microsoft.com/en-us/azure/templates/microsoft.managedidentity/2018-11-30/userassignedidentities?pivots=deployment-language-bicep): a user-defined managed identity used by the chatbot application to acquire a security token via [Azure AD workload identity](https://learn.microsoft.com/en-us/azure/aks/workload-identity-overview) to call the [Chat Completion API](https://platform.openai.com/docs/api-reference/chat) of the [ChatGPT model](https://learn.microsoft.com/en-us/azure/cognitive-services/openai/concepts/models#chatgpt-gpt-35-turbo) provided by the [Azure OpenAI Service](https://learn.microsoft.com/en-us/azure/cognitive-services/openai/overview).
 
 > **NOTE**  
@@ -215,7 +216,7 @@ Azure Managed Prometheus offers rule groups comprising alert and recording rules
 
 Azure Managed Prometheus rule groups, recording rules and alert rules can be created and configured using the [Microsoft.AlertsManagement/prometheusRuleGroups](https://learn.microsoft.com/en-us/azure/templates/microsoft.alertsmanagement/prometheusrulegroups?pivots=deployment-language-bicep) resource type. Prometheus rule groups are defined with a scope of a specific Azure Monitor workspace. Prometheus rule groups can be created using Bicep, Azure Resource Manager (ARM) templates, Terraform, API, Azure CLI, or PowerShell. For more information, see [Azure Monitor managed service for Prometheus rule groups](https://learn.microsoft.com/en-us/azure/azure-monitor/essentials/prometheus-rule-groups).
 
-## Azure Managed Prometheus vs Azure Log Analytics
+## Azure Managed Prometheus vs. Azure Log Analytics
 
 [Azure Log Analytics](https://learn.microsoft.com/en-us/azure/azure-monitor/logs/log-analytics-overview), [Container Insights](https://learn.microsoft.com/en-us/azure/azure-monitor/containers/container-insights-overview), [Azure Managed Prometheus](https://learn.microsoft.com/en-us/azure/azure-monitor/essentials/prometheus-metrics-overview), and [Azure Managed Grafana]((https://learn.microsoft.com/en-us/azure/managed-grafana/overview)) are all monitoring and observability solutions available in Azure. Here is a comparison between them:
 
@@ -1182,7 +1183,7 @@ output location string = managedGrafana.location
 output principalId string = managedGrafana.identity.principalId
 ```
 
-The Bicep modules creates an [Azure Managed Grafana](https://learn.microsoft.com/en-us/azure/managed-grafana/overview) with a system-assigned managed identity. The `azureMonitorWorkspaceIntegrations` array contains the resource id of the [Azure Monitor managed service for Prometheus](https://learn.microsoft.com/en-us/azure/azure-monitor/essentials/prometheus-metrics-overview). For more information integrating an Azure Managed Grafana with an Azure Monitor workspace, see [Collect Prometheus metrics from an AKS cluster](https://learn.microsoft.com/en-us/azure/azure-monitor/containers/prometheus-metrics-enable?tabs=bicep).
+The Bicep modules creates an [Azure Managed Grafana](https://learn.microsoft.com/en-us/azure/managed-grafana/overview) with a system-assigned managed identity. The `azureMonitorWorkspaceIntegrations` array contains the resource id of the [Azure Monitor managed service for Prometheus](https://learn.microsoft.com/en-us/azure/azure-monitor/essentials/prometheus-metrics-overview). For more information on integrating an Azure Managed Grafana with an Azure Monitor workspace, see [Collect Prometheus metrics from an AKS cluster](https://learn.microsoft.com/en-us/azure/azure-monitor/containers/prometheus-metrics-enable?tabs=bicep).
 
 By default, when a Grafana instance is created, Azure Managed Grafana grants it the `Monitoring Reader` role for all Azure Monitor data and Log Analytics resources within a subscription. This means the new Grafana instance can access and search all monitoring data in the subscription. It can view the Azure Monitor metrics and logs from all resources, and any logs stored in Log Analytics workspaces in the subscription. The Bicep module manually assigns the `Monitoring Reader` role to the Azure Managed Grafana system-assigned managed identity at the workspace scope. For more information, see [How to modify access permissions to Azure Monitor](https://learn.microsoft.com/en-us/azure/managed-grafana/how-to-permissions?tabs=azure-cli).
 
@@ -1269,7 +1270,7 @@ The sample makes use of a [Deployment Script](https://learn.microsoft.com/en-us/
 - [NGINX Ingress Controller](https://docs.nginx.com/nginx-ingress-controller/)
 - [Cert-Manager](https://cert-manager.io/docs/)
 
-This sample uses the [NGINX Ingress Controller](https://docs.nginx.com/nginx-ingress-controller/) to expose Linux and Windows demo applications that you can find in the `apps`` folder.
+This sample uses the [NGINX Ingress Controller](https://docs.nginx.com/nginx-ingress-controller/) to expose Linux and Windows demo applications that you can find in the `apps` folder.
 
 ```bash
 # Install kubectl
@@ -1628,7 +1629,7 @@ metadata:
 You can deploy the configmap using the following command:
 
 ```bash
-   kubectl apply -f ama-metrics-settings-configmap.yaml
+kubectl apply -f ama-metrics-settings-configmap.yaml
 ```
 
 Finally, you have to enable the recording rules that are required for the out-of-the-box dashboards:
