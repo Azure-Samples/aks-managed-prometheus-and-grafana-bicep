@@ -25,13 +25,13 @@ products:
 - azure-log-analytics
 - azure-virtual-machines
 - azure-managed-grafana
-name:  How to install an AKS cluster with Azure Managed Prometheus and Azure Managed Grafana via Bicep
-description: This sample shows how to install an AKS cluster with Azure Managed Prometheus and Azure Managed Grafana via Bicep.
+name:  How to create an AKS cluster with Azure Managed Prometheus and Azure Managed Grafana via Bicep
+description: This sample shows how to create an AKS cluster with Azure Managed Prometheus and Azure Managed Grafana via Bicep.
 urlFragment: aks-managed-prometheus-and-grafana-bicep
 azureDeploy: "https://raw.githubusercontent.com/Azure-Samples/aks-managed-prometheus-and-grafana-bicep/main/bicep/main.json"
 ---
 
-# How to install an AKS cluster with Azure Managed Prometheus and Azure Managed Grafana via Bicep
+# How to create an AKS cluster with Azure Managed Prometheus and Azure Managed Grafana via Bicep
 
 Monitoring the health and performance of an [Azure Kubernetes Service(AKS)](https://docs.microsoft.com/en-us/azure/aks/intro-kubernetes) cluster effectively is a crucial task for the organizations. This ensures the stability, performance, and availability of containerized applications running on the cluster. This article shows how to deploy an [Azure Kubernetes Service(AKS)](https://docs.microsoft.com/en-us/azure/aks/intro-kubernetes) cluster, [Azure Monitor managed service for Prometheus](https://learn.microsoft.com/en-us/azure/azure-monitor/essentials/prometheus-metrics-overview), and [Azure Managed Grafana](https://learn.microsoft.com/en-us/azure/managed-grafana/overview) for monitoring the performance and health status of the cluster and workloads. The article also shows how to:
 
